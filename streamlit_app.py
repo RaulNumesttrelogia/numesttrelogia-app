@@ -6,10 +6,11 @@ st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR
+# 2. CONFIGURACIÓN DEL MOTOR (ACTUALIZADO A VERSIÓN ESTABLE)
 API_KEY = "AIzaSyBXKAZs67twCgermebqG3Tbv-DhyHRSCbE"
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.0-pro')
+# Usamos 'gemini-1.5-flash-latest' que es la versión con soporte total
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 # 3. TU PROTOCOLO DEU 19.0 COMPLETO
 sys_prompt = """
@@ -76,13 +77,11 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.chat = model.start_chat(history=[])
     try:
-        # Primero enviamos el protocolo como contexto silencioso
-        st.session_state.chat.send_message(sys_prompt)
-        # Luego iniciamos la conversación con el saludo
-        response = st.session_state.chat.send_message("Hola")
+        # Enviamos el protocolo de forma directa
+        response = st.session_state.chat.send_message(f"{sys_prompt}\n\nHola")
         st.session_state.messages.append({"role": "assistant", "content": response.text})
     except Exception as e:
-        st.error(f"Error al conectar con el NumeroLoKo: {e}")
+        st.error(f"Error de conexión con el NumeroLoKo: {e}")
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
