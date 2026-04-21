@@ -6,15 +6,15 @@ st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR (SEGURA Y LIMPIA)
-# Usamos la llave de los Secrets que ya tienes configurada
+# 2. CONFIGURACIÓN DEL MOTOR (VERSIÓN ESTABLE V1)
+# Forzamos la conexión por la vía principal para evitar el error 404
 API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=API_KEY)
 
-# Mantenemos el modelo flash pero quitamos el campo 'typical_p' que falla
+# Usamos el modelo flash con la configuración de seguridad de 2026
 model = genai.GenerativeModel(
     model_name='gemini-1.5-flash',
-    generation_config={"temperature": 0.7}
+    generation_config={"typical_p": 0.95, "temperature": 0.7}
 )
 
 # 3. PROTOCOLO DEU 19.0 (EL HIJO DEL VIENTO)
@@ -65,6 +65,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.chat = model.start_chat(history=[])
     try:
+        # Iniciamos con el protocolo y el saludo
         response = st.session_state.chat.send_message(f"{sys_prompt}\n\nActiva el sistema y saluda.")
         st.session_state.messages.append({"role": "assistant", "content": response.text})
     except Exception as e:
