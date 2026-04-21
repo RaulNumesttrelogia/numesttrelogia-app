@@ -9,7 +9,7 @@ st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 # 2. CONFIGURACIÓN DEL MOTOR (CORREGIDO)
 API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.0-pro')
 
 # 3. TU PROTOCOLO DEU 19.0 (EL DE TELEGRAM)
 sys_prompt = """
