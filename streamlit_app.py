@@ -12,10 +12,9 @@ API_KEY = "AIzaSyBXKAZs67twCgermebqG3Tbv-DhyHRSCbE"
 genai.configure(api_key=API_KEY)
 
 # Usamos el modelo flash con la configuración de seguridad de 2026
-# HEMOS QUITADO 'typical_p' QUE ERA LO QUE DABA EL ERROR CORTO
 model = genai.GenerativeModel(
     model_name='gemini-1.5-flash',
-    generation_config={"temperature": 0.7}
+    generation_config={"typical_p": 0.95, "temperature": 0.7}
 )
 
 # 3. PROTOCOLO DEU 19.0 (EL HIJO DEL VIENTO)
