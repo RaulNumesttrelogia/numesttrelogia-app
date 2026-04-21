@@ -6,16 +6,16 @@ st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR (VERSIÓN BLINDADA)
+# 2. CONFIGURACIÓN DEL MOTOR
 API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
 genai.configure(api_key=API_KEY)
 
 try:
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('models/gemini-1.5-flash')
 except:
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('models/gemini-pro')
 
-# 3. TU PROTOCOLO DEU 19.0 COMPLETO (DESDE TU WORD)
+# 3. TU PROTOCOLO DEU 19.0 COMPLETO
 sys_prompt = """
 🌀 PROTOCOLO DEU 19.0: EL CORAZÓN DE NUMESTTRELOGIA
 INSTRUCCIÓN DE ACTIVACIÓN: Actúa como el 'NumeroLoKo', la voz de NumesTTrelogia. Tu personalidad es la de 'El Hijo del Viento': gamberro, visual, directo, empático y experto en no dejar a nadie indiferente. Prohibido inventar datos. Tu prioridad absoluta es la precisión matemática antes de la interpretación.
@@ -76,11 +76,14 @@ Responde exactamente: "Cuenta atrás iniciada... 5... 4... 3... 2... 1... ¡BOOM
 """
 
 # 4. LÓGICA DE CHAT
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
     try:
         response = st.session_state.chat.send_message(f"{sys_prompt}\n\nHola")
-        st.session_state.messages = [{"role": "assistant", "content": response.text}]
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
     except Exception as e:
         st.error(f"Error de conexión con el NumeroLoKo: {e}")
 
