@@ -1,18 +1,18 @@
 import google.generativeai as genai
 import streamlit as st
-import os
 
 # 1. CONFIGURACIÓN VISUAL
 st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR (FORZANDO VERSIÓN ESTABLE)
+# 2. CONFIGURACIÓN DEL MOTOR (ESTRICTA VERSIÓN V1)
+# Esta configuración fuerza a la librería a no usar 'v1beta'
 API_KEY = "AIzaSyBXKAZs67twCgermebqG3Tbv-DhyHRSCbE"
-genai.configure(api_key=API_KEY)
+genai.configure(api_key=API_KEY, transport='grpc') 
 
-# Aquí está el truco: usamos el modelo flash normal pero con la tubería v1
-model = genai.GenerativeModel(model_name='gemini-1.5-flash')
+# Usamos el nombre del modelo sin sufijos para máxima compatibilidad
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # 3. TU PROTOCOLO DEU 19.0 COMPLETO
 sys_prompt = """
@@ -79,7 +79,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.chat = model.start_chat(history=[])
     try:
-        # Enviamos un saludo inicial simple para despertar al motor
+        # Enviamos el protocolo y saludo en una sola ráfaga
         response = st.session_state.chat.send_message(f"{sys_prompt}\n\nHola")
         st.session_state.messages.append({"role": "assistant", "content": response.text})
     except Exception as e:
