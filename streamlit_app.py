@@ -8,7 +8,7 @@ st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
 # 2. CONFIGURACIÓN DEL MOTOR (VERSIÓN ESTABLE V1)
 # Forzamos la conexión por la vía principal para evitar el error 404
-API_KEY = "AIzaSyBXKAZs67twCgermebqG3Tbv-DhyHRSCbE"
+API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=API_KEY)
 
 # Usamos el modelo flash con la configuración de seguridad de 2026
