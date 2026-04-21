@@ -8,7 +8,7 @@ st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
 genai.configure(api_key=API_KEY)
 
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 sys_prompt = """
 🌀 PROTOCOLO DEU 19.0: EL CORAZÓN DE NUMESTTRELOGIA
@@ -91,10 +91,7 @@ if prompt := st.chat_input("¡Suéltame tu rollo!"):
 
     with st.chat_message("assistant"):
         try:
-            if prompt.lower() in ['cerrar', 'salir', 'adiós', 'adios', 'no']:
-                response = st.session_state.chat.send_message("CERRAR SESIÓN")
-            else:
-                response = st.session_state.chat.send_message(prompt)
+            response = st.session_state.chat.send_message(prompt)
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except:
