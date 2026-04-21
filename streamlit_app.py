@@ -7,7 +7,7 @@ st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
 # 2. CONFIGURACIÓN DEL MOTOR (CORREGIDO)
-API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
+API_KEY = "AIzaSyBXKAZs67twCgermebqG3Tbv-DhyHRSCbE"
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-1.0-pro')
 
