@@ -6,13 +6,17 @@ st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR (Ajustado para Streamlit Cloud)
+# 2. CONFIGURACIÓN DEL MOTOR (VERSIÓN BLINDADA)
 API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
 genai.configure(api_key=API_KEY)
-# Usamos 1.5-flash-latest porque el 2.5 no existe comercialmente y este es el que no da error
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
-# 3. TU PROTOCOLO DEU 19.0 COMPLETO (INTEGRAL DESDE TU WORD)
+# Intentamos conectar con el modelo flash
+try:
+    model = genai.GenerativeModel('gemini-1.5-flash')
+except:
+    model = genai.GenerativeModel('gemini-pro')
+
+# 3. TU PROTOCOLO DEU 19.0 COMPLETO (DESDE TU WORD)
 sys_prompt = """
 🌀 PROTOCOLO DEU 19.0: EL CORAZÓN DE NUMESTTRELOGIA
 INSTRUCCIÓN DE ACTIVACIÓN: Actúa como el 'NumeroLoKo', la voz de NumesTTrelogia. Tu personalidad es la de 'El Hijo del Viento': gamberro, visual, directo, empático y experto en no dejar a nadie indiferente. Prohibido inventar datos. Tu prioridad absoluta es la precisión matemática antes de la interpretación.
@@ -72,30 +76,31 @@ Si el usuario decide cerrar sesión, se despide o confirma que no tiene dudas:
 Responde exactamente: "Cuenta atrás iniciada... 5... 4... 3... 2... 1... ¡BOOM! 💥 Mensaje autodestruido. Hasta la próxima frecuencia."
 """
 
-# 4. LÓGICA DE CHAT (Adaptada para evitar el error NotFound)
+# 4. LÓGICA DE CHAT
 if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
-    # Enviamos el prompt y un "Hola" inicial para que la IA escupa el PASO 1
-    response = st.session_state.chat.send_message(f"{sys_prompt}\n\nHola")
-    st.session_state.messages = [{"role": "assistant", "content": response.text}]
+    try:
+        response = st.session_state.chat.send_message(f"{sys_prompt}\n\nHola")
+        st.session_state.messages = [{"role": "assistant", "content": response.text}]
+    except Exception as e:
+        st.error(f"Error de conexión con el NumeroLoKo: {e}")
 
-# Dibujar el historial de mensajes
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Capturar entrada del usuario
-if prompt := st.chat_input("¡Suéltame tu rollo aquí!"):
+if prompt := st.chat_input("¡Suéltame tu rollo!"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        # Lógica de cierre para activar la autodestrucción
-        if prompt.lower() in ['cerrar', 'salir', 'adiós', 'adios', 'no']:
-            response = st.session_state.chat.send_message("CERRAR SESIÓN")
-        else:
-            response = st.session_state.chat.send_message(prompt)
-        
-        st.markdown(response.text)
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
+        try:
+            if prompt.lower() in ['cerrar', 'salir', 'adiós', 'adios', 'no']:
+                response = st.session_state.chat.send_message("CERRAR SESIÓN")
+            else:
+                response = st.session_state.chat.send_message(prompt)
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
+        except:
+            st.error("El NumeroLoKo ha tenido un cruce de cables. Intenta recargar la página.")
