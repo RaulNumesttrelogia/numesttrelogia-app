@@ -13,7 +13,7 @@ genai.configure(api_key=API_KEY)
 try:
     model = genai.GenerativeModel('models/gemini-1.5-flash')
 except:
-    model = genai.GenerativeModel('models/gemini-pro')
+    model = genai.GenerativeModel('gemini-pro')
 
 # 3. TU PROTOCOLO DEU 19.0 COMPLETO
 sys_prompt = """
