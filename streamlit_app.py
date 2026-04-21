@@ -10,7 +10,6 @@ st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 API_KEY = "AIzaSyBSe9bUVAJZmwsXeYpC1e7Xe3cd7chHOnQ"
 genai.configure(api_key=API_KEY)
 
-# Intentamos conectar con el modelo flash
 try:
     model = genai.GenerativeModel('gemini-1.5-flash')
 except:
