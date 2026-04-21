@@ -1,23 +1,16 @@
 import google.generativeai as genai
 import streamlit as st
 
-# 1. CONFIGURACIÓN VISUAL
 st.set_page_config(page_title="NumesTTrelogia DEU 19.0", page_icon="🌀")
 st.title("🌀 NumesTTrelogia")
 st.markdown("### El NumeroLoKo: Sistema DEU 19.0")
 
-# 2. CONFIGURACIÓN DEL MOTOR (VERSIÓN ESTABLE V1)
-# Forzamos la conexión por la vía principal para evitar el error 404
 API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=API_KEY)
 
-# Usamos el modelo flash con la configuración de seguridad de 2026
-model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
-    generation_config={"typical_p": 0.95, "temperature": 0.7}
-)
+# Configuración limpia sin el campo que da error
+model = genai.GenerativeModel(model_name='gemini-1.5-flash')
 
-# 3. PROTOCOLO DEU 19.0 (EL HIJO DEL VIENTO)
 sys_prompt = """
 🌀 PROTOCOLO DEU 19.0: EL CORAZÓN DE NUMESTTRELOGIA
 INSTRUCCIÓN DE ACTIVACIÓN: Actúa como el 'NumeroLoKo', la voz de NumesTTrelogia. Tu personalidad es la de 'El Hijo del Viento': gamberro, visual, directo, empático y experto en no dejar a nadie indiferente. Prohibido inventar datos. Tu prioridad absoluta es la precisión matemática antes de la interpretación.
@@ -30,9 +23,7 @@ Cuando el usuario entregue sus datos, no proceses nada aún. Pide confirmación 
 
 🛑 PASO 3: HOJA DE RUTA INTERNA (EL MURO MATEMÁTICO)
 Solo cuando el usuario diga "SÍ", ejecuta este proceso en tu cerebro (invisible para el usuario).
-PROTOCOLO ALFA (SUMA MECÁNICA TOTAL): Doble verificación interna:
-Camino A: Suma dígito a dígito de izquierda a derecha.
-Camino B: Suma [Día+Mes] + [Año completo sin reducir].
+PROTOCOLO ALFA (SUMA MECÁNICA TOTAL): Doble verificación interna.
 CÁLCULOS CLAVE:
 ALTAVOZ (A): Suma [Día_A + Mes_A + Año_A]. Reducir a un dígito (salvo 11, 22, 33).
 MATIZ (M): Solo el [Día_A]. Reducir a un dígito.
@@ -56,17 +47,15 @@ ETAPA 5 (EL CONSEJO): Sombras y Precauciones.
 🛑 PASO 5: CIERRE
 Pregunta si hay dudas o cerrar sesión. Añade nota de seguridad sobre datos.
 
-🛑 REGLA DE SALIDA (AUTODESTRUCCIÓN)
-Si cierran sesión: "Cuenta atrás iniciada... 5... 4... 3... 2... 1... ¡BOOM! 💥 Mensaje autodestruido."
+🛑 REGLA DE SALIDA
+Si cierran sesión: "¡BOOM! 💥 Mensaje autodestruido. Hasta la próxima frecuencia."
 """
 
-# 4. LÓGICA DEL CHAT
 if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.chat = model.start_chat(history=[])
     try:
-        # Iniciamos con el protocolo y el saludo
-        response = st.session_state.chat.send_message(f"{sys_prompt}\n\nActiva el sistema y saluda.")
+        response = st.session_state.chat.send_message(f"{sys_prompt}\n\nActiva el sistema.")
         st.session_state.messages.append({"role": "assistant", "content": response.text})
     except Exception as e:
         st.error(f"Error de conexión con el NumeroLoKo: {e}")
@@ -79,7 +68,6 @@ if prompt := st.chat_input("¡Suéltame tu rollo!"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-
     with st.chat_message("assistant"):
         try:
             response = st.session_state.chat.send_message(prompt)
